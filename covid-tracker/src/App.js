@@ -3,12 +3,16 @@ import React, { useState, useEffect } from "react";
 import { MenuItem, FormControl, Select, Card, CardContent } from "@material-ui/core";
 import InfoBox from "./InfoBox";
 import Map from "./Map";
+import Table from "./Table"
+import {sortData} from "./util"
+import LineGraph from "./LineGraph"
 
 function App() {
   const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState("worldwide");
   const [countryInfo, setCountryInfo]= useState({})
-
+  const [tableData, setTableData]=  useState([])
+// Loads when page loads with placeholder information
   useEffect(() => {
     fetch('https://disease.sh/v3/covid-19/all')
     .then((response) => response.json())
@@ -16,7 +20,7 @@ function App() {
       setCountryInfo(data)
     })
   }, [])
-
+// Fetched the countries for the dropdown menu
   useEffect(() => {
     const getCountry = async () => {
       await fetch("https:///disease.sh/v3/covid-19/countries")
@@ -26,11 +30,15 @@ function App() {
             name: country.country,
             value: country.countryInfo.iso2,
           }));
+          const sortedData= sortData(data)
+          setTableData(sortedData)
           setCountries(countries);
         });
     };
     getCountry();
   }, []);
+
+// Once item is selected it fetches the information and loads the cards
   const onCountryChange = async (event) => {
     const countryCode = event.target.value;
 
@@ -42,10 +50,10 @@ function App() {
       setCountryInfo(data)
     })
   };
-  console.log(countryInfo)
+
   return (
     <div className="app">
-      <div className="app__left">
+      <div className="app__right">
         <div className="app__header">
           <h1>COVID TRACKER </h1>
           <FormControl className="app__dropdown">
@@ -71,10 +79,12 @@ function App() {
         </div>
         <Map />
       </div>
-      <Card className="app__left">
+      <Card className="app__right">
         <CardContent>
           <h3>Live Cases by Country </h3>
+          <Table countries={tableData}/>
           <h3>World Wide New Cases</h3>
+          <LineGraph />
         </CardContent>
       </Card>
     </div>
