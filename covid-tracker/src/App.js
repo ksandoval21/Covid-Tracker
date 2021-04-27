@@ -6,12 +6,18 @@ import Map from "./Map";
 import Table from "./Table"
 import {sortData} from "./util"
 import LineGraph from "./LineGraph"
+import "leaflet/dist/leaflet.css"
 
 function App() {
   const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState("worldwide");
   const [countryInfo, setCountryInfo]= useState({})
   const [tableData, setTableData]=  useState([])
+  const [mapCenter, setMapCenter] = useState([34.80746, -40.4796]);
+  const [zoom, setZoom] = useState(3);
+  const [mapCountries, setMapCountries] = useState([]);
+  const [casesType, setCasesType] = useState("cases");
+  const [isLoading, setLoading] = useState(false);
 // Loads when page loads with placeholder information
   useEffect(() => {
     fetch('https://disease.sh/v3/covid-19/all')
@@ -29,9 +35,12 @@ function App() {
           const countries = data.map((country) => ({
             name: country.country,
             value: country.countryInfo.iso2,
+            population: country.country.population,
+            
           }));
           const sortedData= sortData(data)
-          setTableData(sortedData)
+          setTableData(sortedData);
+          setMapCountries(data);
           setCountries(countries);
         });
     };
@@ -40,6 +49,7 @@ function App() {
 
 // Once item is selected it fetches the information and loads the cards
   const onCountryChange = async (event) => {
+    setLoading(true)
     const countryCode = event.target.value;
 
     const url = countryCode === 'worldwide' ? 'https://disease.sh/v3/covid-19/all' : `https://disease.sh/v3/covid-19/countries/${countryCode}`;
@@ -48,7 +58,14 @@ function App() {
     .then(data=> {
       setCountry(countryCode);
       setCountryInfo(data)
-    })
+      setLoading(false);
+      console.log(countryInfo)
+        // console.log([data.countryInfo.lat, data.countryInfo.long]);
+        countryCode === "worldwide"
+          ? setMapCenter([34.80746, -70.4796])
+          : setMapCenter([data.countryInfo.lat, data.countryInfo.long]);
+        setZoom(4);
+      });
   };
 
   return (
@@ -69,7 +86,7 @@ function App() {
             </Select>
           </FormControl>
         </div>
-        <h2 className="today">Today's : </h2>
+        <h2 className="today">Total Population: {countryInfo.population}</h2>
         <div className="app__stats">
           <InfoBox title="Cases" cases={countryInfo.todayCases} total={countryInfo.cases} />
 
@@ -77,13 +94,19 @@ function App() {
 
           <InfoBox title="Deaths" cases={countryInfo.todayDeaths} total={countryInfo.deaths} />
         </div>
-        <Map />
+        <h2>Cases Map</h2>
+        <Map 
+          countries={mapCountries}
+          center={mapCenter}
+          zoom={zoom}
+          casesType={casesType}
+        />
       </div>
       <Card className="app__right">
         <CardContent>
           <h3>Live Cases by Country </h3>
           <Table countries={tableData}/>
-          <h3>World Wide New Cases</h3>
+          <h3>Graph Analytics by Day</h3>
           <LineGraph />
         </CardContent>
       </Card>
