@@ -6,8 +6,8 @@ function InfoBox({title, cases, total}) {
         <Card className="infoBox">
             <CardContent>
                 <Typography color="textSecondary">{title}</Typography>
-                <h2 className="infoBox__cases">{cases}</h2>
-                <Typography className="infoBox__deaths" color="textSecondary">{total} Total</Typography>
+                <h2 className="infoBox__cases">{cases} reported</h2>
+                <Typography className="infoBox__deaths" color="textSecondary">Total: {total}</Typography>
             </CardContent>
             
         </Card>
