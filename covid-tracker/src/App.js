@@ -64,7 +64,7 @@ function App() {
         countryCode === "worldwide"
           ? setMapCenter([34.80746, -70.4796])
           : setMapCenter([data.countryInfo.lat, data.countryInfo.long]);
-        setZoom(4);
+        setZoom(5);
       });
   };
 
@@ -104,9 +104,9 @@ function App() {
       </div>
       <Card className="app__right">
         <CardContent>
-          <h3>Live Cases by Country </h3>
+          <h3>Sorted Cases</h3>
           <Table countries={tableData}/>
-          <h3>Graph Analytics by Day</h3>
+          <h3>Cases by Day</h3>
           <LineGraph />
         </CardContent>
       </Card>
