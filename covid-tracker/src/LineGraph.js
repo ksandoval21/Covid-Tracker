@@ -13,6 +13,7 @@ const options = {
   },
   maintainAspectRatio: false,
   tooltips: {
+    enabled: false,
     mode: "index",
     intersect: false,
     callbacks: {
@@ -87,6 +88,7 @@ function LineGraph({ casesType }) {
     <div>
       {data?.length > 0 && (
         <Line
+          options={options}
           data={{
             datasets: [
               {
@@ -96,7 +98,6 @@ function LineGraph({ casesType }) {
               },
             ],
           }}
-          options={options}
         />
       )}
     </div>

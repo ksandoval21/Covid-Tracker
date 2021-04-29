@@ -17,7 +17,6 @@ function App() {
   const [zoom, setZoom] = useState(3);
   const [mapCountries, setMapCountries] = useState([]);
   const [casesType, setCasesType] = useState("cases");
-  const [isLoading, setLoading] = useState(false);
 // Loads when page loads with placeholder information
   useEffect(() => {
     fetch('https://disease.sh/v3/covid-19/all')
@@ -42,6 +41,7 @@ function App() {
           setTableData(sortedData);
           setMapCountries(data);
           setCountries(countries);
+          setCasesType("cases")
         });
     };
     getCountry();
@@ -49,7 +49,6 @@ function App() {
 
 // Once item is selected it fetches the information and loads the cards
   const onCountryChange = async (event) => {
-    setLoading(true)
     const countryCode = event.target.value;
 
     const url = countryCode === 'worldwide' ? 'https://disease.sh/v3/covid-19/all' : `https://disease.sh/v3/covid-19/countries/${countryCode}`;
@@ -58,7 +57,6 @@ function App() {
     .then(data=> {
       setCountry(countryCode);
       setCountryInfo(data)
-      setLoading(false);
       console.log(countryInfo)
         // console.log([data.countryInfo.lat, data.countryInfo.long]);
         countryCode === "worldwide"
