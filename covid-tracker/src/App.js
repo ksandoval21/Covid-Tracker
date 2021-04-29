@@ -6,6 +6,7 @@ import Map from "./Map";
 import Table from "./Table"
 import {sortData} from "./util"
 import LineGraph from "./LineGraph"
+// Leaflet is the map
 import "leaflet/dist/leaflet.css";
 
 function App() {
@@ -58,14 +59,12 @@ function App() {
       setCountry(countryCode);
       setCountryInfo(data)
       console.log(countryInfo)
-        // console.log([data.countryInfo.lat, data.countryInfo.long]);
         countryCode === "worldwide"
           ? setMapCenter([41.257017, 29.077524])
           : setMapCenter([data.countryInfo.lat, data.countryInfo.long]);
         setZoom(5);
       });
   };
-
   return (
     <div className="app">
       <div className="app__right">

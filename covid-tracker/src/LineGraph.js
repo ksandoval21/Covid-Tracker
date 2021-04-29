@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
+// Numral is the pop up when you hover over graph 
 import numeral from "numeral";
 
 const options = {
